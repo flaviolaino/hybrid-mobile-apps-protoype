@@ -2,7 +2,7 @@ var App = {
 
 	info: {},
 
-	alert: window.alert.bind(),
+	alert: (navigator.notification) ? navigator.notification.alert : window.alert.bind(),
 
 	_init: function(){
 		Date.prototype.getFullDate = function(){
