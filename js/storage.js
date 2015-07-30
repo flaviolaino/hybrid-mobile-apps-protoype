@@ -27,13 +27,11 @@ var Storage = {
 		var db = this.storage[this.db] || '[]',
 			items = JSON.parse(db) || [];
 
-		if(items.hasOwnProperty(id)){
-			items[id] = data;
+		items[id] = data;
 
-			this.storage.removeItem(this.db);
+		this.storage.removeItem(this.db);
 
-			this.storage.setItem(this.db, JSON.stringify(items));
-		}
+		this.storage.setItem(this.db, JSON.stringify(items));
 
 		return this;
 	},
@@ -60,17 +58,17 @@ var Storage = {
 		if(typeof filters == 'object' && Object.getOwnPropertyNames(filters).length !== 0){
 			for(var i in items){
 				var item = items[i],
-					to_push = false;
+					to_push = 0;
 
 				for(var filter in filters){
-					if(item.hasOwnProperty(filter) && item[filter].indexOf(filters[filter]) > -1){
-						to_push = true;
+					if(item.data.hasOwnProperty(filter) && item.data[filter].toLowerCase().indexOf(filters[filter].toLowerCase()) > -1){
+						to_push++;
 					}else{
-						to_push = false;
+						to_push--;
 					}
 				}
 
-				if(to_push === true){
+				if(to_push > 0){
 					found.push(item);
 				}
 			}
