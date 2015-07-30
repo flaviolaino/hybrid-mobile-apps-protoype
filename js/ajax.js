@@ -1,9 +1,15 @@
-var ajax = function(url, method, data){
-	this.url = url;
-	this.method = method ? method.toUpperCase() : '';
-	this.data = data;
+var ajax = function(settings){
+	var xmlhttp = new XMLHttpRequest(),
+		settings = settings || {},
+		url = settings.url || '',
+		method = settings.method || '',
+		method = method.toUpperCase(),
+		method = (method != 'GET' && method != 'POST') ? 'GET' : method,
+		data = settings.data || '',
+		success = settings.success || function(){},
+		fail = settings.fail || function(){};
 
-	urlify_data = function(data, prefix){
+	var urlify_data = function(data, prefix){
 		var ret = '';
 
 		if(typeof data == 'object'){
@@ -25,27 +31,23 @@ var ajax = function(url, method, data){
 		return ret;
 	};
 
-	return new Promise(function(success, fail){
-		var xmlhttp = new XMLHttpRequest(),
-			method = (this.method != 'GET' && this.method != 'POST') ? 'GET' : this.method,
-			data = (!this.data) ? '' : this.data;
+	xmlhttp.open(method, url, true);
 
-		xmlhttp.open(method, this.url, true);
-
-		xmlhttp.onreadystatechange = function(){
-			if(xmlhttp.readyState === 4){
+	xmlhttp.onreadystatechange = function(){
+		if(xmlhttp.readyState === 4){
+			if(xmlhttp.status === 200){
 				success(xmlhttp);
 			}else{
 				fail(xmlhttp);
 			}
-		};
+		}
+	};
 
-		xmlhttp.onerror = function(){
-			fail(xmlhttp);
-		};
+	xmlhttp.onerror = function(){
+		fail(xmlhttp);
+	};
 
-		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 
-		xmlhttp.send(urlify_data(data));
-	});
+	xmlhttp.send(urlify_data(data));
 };
