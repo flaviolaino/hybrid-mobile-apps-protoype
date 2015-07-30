@@ -32,7 +32,7 @@ var App = {
 		}
 	},
 
-	_validElements: function(elemenet){
+	_validElements: function(element){
 		element = element || {};
 
 		if(!element.length){
@@ -43,11 +43,11 @@ var App = {
 		}
 
 		return element;
-	}
+	},
 
 	collection_to_array: function(collection){
 		return Array.prototype.slice.call(collection);
-	}
+	},
 
 };
 
